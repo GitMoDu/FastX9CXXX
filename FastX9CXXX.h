@@ -7,19 +7,23 @@
 #ifndef _FASTX9CXXX_h
 #define _FASTX9CXXX_h
 
-//#define USE_PIN_DEFINITIONS
+//#define USE_PIN_DEFINITIONS //Enable this to set the pins at compile time, from a definitions file.
 
 #include <Arduino.h>
 #include <Fast.h>
-#ifdef USE_PIN_DEFINITIONS
+
+#ifdef USE_PIN_DEFINITIONS 
 #include "PinDefinitions.h"
 #endif // USE_PIN_DEFINITIONS
 
-#define X9_STEPS 100
+#define X9_STEPS 100 //100 Wiper Tap Points
 
-class FastX9CXXX
-{
-private:
+#define X9C102_RESISTANCE   1000 //X9C102 = 1kOhm
+#define X9C103_RESISTANCE  10000 //X9C103 = 10kOhm
+#define X9C503_RESISTANCE  50000 //X9C503 = 50kOhm
+#define X9C104_RESISTANCE 100000 //X9C104 = 100kOhm
+
+
 #define NCS_TO_NINC_SETUP 1
 #define NINC_HIGH_TO_UND_CHANGE 1
 #define UND_TO_NINC_SETUP 3
@@ -33,27 +37,179 @@ private:
 #define POWER_UP_TO_WIPER_STABLE 500
 
 
+class FastX9CXXX
+{
+private:
 	FastOut PinCS, PinUD;
 	FastShifter PinINC;
 
 	uint8_t CurrentStep = 0;
+	float ResistanceStep = 0;
+
+protected:
+	virtual uint32_t GetMaxResistance()
+	{
+		return 0;
+	}
 
 public:
 #ifdef USE_PIN_DEFINITIONS
-	bool Begin();
+	bool Begin()
+	{
+		PinCS.Setup(X9_CS_PIN, LOW);
+		PinUD.Setup(X9_UD_PIN, LOW);
+		PinINC.Setup(X9_INC_PIN, HIGH);
+
+		Reset();
+	}
 #endif // USE_PIN_DEFINITIONS
-	bool Setup(const byte csPin, const byte udPin, const byte incPin);
 
-	void Reset();
-	void JumpToStep(uint8_t step);
+	uint32_t GetEstimatedResistance()
+	{
+		return uint32_t(round((float)CurrentStep * ResistanceStep));
+	}
 
-	void Down(bool store = true);
-	void Up(bool store = true);
+	FastX9CXXX()
+	{
+		
+	}
 
-	uint8_t GetStep();
+	FastX9CXXX(const byte csPin, const byte udPin, const byte incPin)
+	{
+		Setup(csPin, udPin, incPin);
+	}
 
-	void Store();
-	
+	void Setup(const byte csPin, const byte udPin, const byte incPin)
+	{
+		PinCS.Setup(csPin, LOW);
+		PinUD.Setup(udPin, LOW);
+		PinINC.Setup(incPin, HIGH);
+
+		ResistanceStep = (float)GetMaxResistance() / (float) X9_STEPS;
+
+		Reset();
+	}
+
+	void Reset()
+	{
+		PinCS.Set(LOW);
+		PinUD.Set(LOW);
+		PinINC.Set(HIGH);
+		for (uint8_t i = 0; i < X9_STEPS; i++)
+		{
+			PinINC.PulseLow(NINC_HIGH_PERIOD);
+			delayMicroseconds(NINC_LOW_PERIOD);
+		}
+		PinCS.Set(HIGH);
+		PinUD.Set(HIGH);
+		CurrentStep = 0;
+	}
+
+	//Input step [0 ; X9_STEPS]
+	void JumpToStep(const uint8_t step)
+	{
+		if (step > X9_STEPS)
+		{
+			return;//Invalid step.
+		}
+		while (CurrentStep != step)
+		{
+			if (CurrentStep > step)
+			{
+				Down();
+			}
+			else
+			{
+				Up();
+			}
+		}
+	}
+
+	void Down(bool store = true)
+	{
+		PinINC.Set(HIGH);
+		PinCS.Set(LOW);
+		PinUD.Set(LOW);
+		delayMicroseconds(NINC_HIGH_TO_UND_CHANGE);
+		PinINC.Set(LOW);
+
+		if (store)
+		{
+			Store();
+		}
+
+		if (CurrentStep > 1)
+		{
+			CurrentStep--;
+		}
+	}
+	void Up(bool store = true)
+	{
+		PinINC.Set(HIGH);
+		PinCS.Set(LOW);
+		PinUD.Set(HIGH);
+		delayMicroseconds(NINC_HIGH_TO_UND_CHANGE);
+		PinINC.Set(LOW);
+
+		if (store)
+		{
+			Store();
+		}
+
+		if (CurrentStep < X9_STEPS)
+		{
+			CurrentStep++;
+		}
+	}
+
+	uint8_t GetStep()
+	{
+		return CurrentStep;
+	}
+
+	void Store()
+	{
+		PinINC.Set(HIGH);
+		PinCS.Set(HIGH);
+		//delayMicroseconds(NCS_DESELECT_TIME_STORE);//This is way too long to wait for storage, better check elapsed outside if needed.
+		PinCS.Set(LOW);
+	}
+};
+
+class FastX9C102 : public FastX9CXXX
+{
+protected:
+	virtual uint32_t GetMaxResistance()
+	{
+		return X9C102_RESISTANCE;
+	}
+};
+
+class FastX9C103 : public FastX9CXXX
+{
+protected:
+	virtual uint32_t GetMaxResistance()
+	{
+		return X9C103_RESISTANCE;
+	}
+};
+
+class FastX9C503 : public FastX9CXXX
+{
+protected:
+	virtual uint32_t GetMaxResistance()
+	{
+		return X9C503_RESISTANCE;
+	}
+};
+
+class FastX9C104 : public FastX9CXXX
+{
+protected:
+	virtual uint32_t GetMaxResistance()
+	{
+		return X9C104_RESISTANCE;
+	}
 };
 
 #endif
