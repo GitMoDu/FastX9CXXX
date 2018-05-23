@@ -106,7 +106,7 @@ public:
 	}
 
 	//Input step [0 ; X9_STEPS]
-	void JumpToStep(const uint8_t step)
+	void JumpToStep(const uint8_t step, const bool store = true)
 	{
 		if (step > X9_STEPS)
 		{
@@ -116,16 +116,21 @@ public:
 		{
 			if (CurrentStep > step)
 			{
-				Down();
+				Down(false);
 			}
 			else
 			{
-				Up();
+				Up(false);
 			}
+		}
+		
+		if(store)
+		{
+			Store();
 		}
 	}
 
-	void Down(bool store = true)
+	void Down(const bool store = true)
 	{
 		PinINC.Set(HIGH);
 		PinCS.Set(LOW);
