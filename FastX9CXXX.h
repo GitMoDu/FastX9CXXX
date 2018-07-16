@@ -45,11 +45,21 @@ private:
 
 	uint8_t CurrentStep = 0;
 	float ResistanceStep = 0;
+	bool ResistanceUpdated = false;
 
 protected:
 	virtual uint32_t GetMaxResistance()
 	{
 		return 0;
+	}
+	
+	void UpdateResistanceStep()
+	{
+		if(!ResistanceUpdated && GetMaxResistance() != 0)
+		{
+			ResistanceStep = (float)GetMaxResistance() / (float) X9_STEPS;
+			ResistanceUpdated = true;
+		}		
 	}
 
 public:
@@ -60,23 +70,30 @@ public:
 		PinUD.Setup(X9_UD_PIN, LOW);
 		PinINC.Setup(X9_INC_PIN, HIGH);
 
+		UpdateResistanceStep();
+		
 		Reset();
 	}
 #endif // USE_PIN_DEFINITIONS
 
 	uint32_t GetEstimatedResistance()
 	{
+		UpdateResistanceStep();
+		
 		return uint32_t(round((float)CurrentStep * ResistanceStep));
 	}
 
 	FastX9CXXX()
 	{
-		
+		ResistanceUpdated = false;
+		UpdateResistanceStep();
 	}
 
 	FastX9CXXX(const byte csPin, const byte udPin, const byte incPin)
 	{
+		ResistanceUpdated = false;
 		Setup(csPin, udPin, incPin);
+		UpdateResistanceStep();
 	}
 
 	void Setup(const byte csPin, const byte udPin, const byte incPin)
@@ -84,8 +101,6 @@ public:
 		PinCS.Setup(csPin, LOW);
 		PinUD.Setup(udPin, LOW);
 		PinINC.Setup(incPin, HIGH);
-
-		ResistanceStep = (float)GetMaxResistance() / (float) X9_STEPS;
 
 		Reset();
 	}
@@ -148,6 +163,7 @@ public:
 			CurrentStep--;
 		}
 	}
+	
 	void Up(bool store = true)
 	{
 		PinINC.Set(HIGH);
@@ -186,6 +202,7 @@ class FastX9C102 : public FastX9CXXX
 protected:
 	virtual uint32_t GetMaxResistance()
 	{
+		UpdateResistanceStep();
 		return X9C102_RESISTANCE;
 	}
 };
