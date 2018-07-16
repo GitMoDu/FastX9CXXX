@@ -17,7 +17,7 @@ FastX9CXXX	KEYWORD2
 # Instances (KEYWORD2)
 #######################################
 
-FastX9CXXX KEYWORD2
+FastX9CXXX	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
