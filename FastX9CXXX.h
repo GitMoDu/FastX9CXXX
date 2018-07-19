@@ -202,7 +202,6 @@ class FastX9C102 : public FastX9CXXX
 protected:
 	virtual uint32_t GetMaxResistance()
 	{
-		UpdateResistanceStep();
 		return X9C102_RESISTANCE;
 	}
 };
@@ -235,4 +234,3 @@ protected:
 };
 
 #endif
-
