@@ -169,7 +169,7 @@ public:
 	{
 		PinINC.Set(HIGH);
 		PinCS.Set(HIGH);
-		//delayMicroseconds(NCS_DESELECT_TIME_STORE);//This is way too long to wait for storage, better check elapsed outside if needed.
+		delayMicroseconds(NCS_DESELECT_TIME_STORE);//This is way too long to wait for storage, better check elapsed outside if needed.
 		PinCS.Set(LOW);
 	}
 };
