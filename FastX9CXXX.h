@@ -85,6 +85,7 @@ public:
 		PinCS.Set(LOW);
 		PinUD.Set(LOW);
 		PinINC.Set(HIGH);
+
 		for (uint8_t i = 0; i < X9_STEPS; i++)
 		{
 			PinINC.PulseLow(NINC_HIGH_PERIOD);
@@ -102,6 +103,7 @@ public:
 		{
 			return;//Invalid step.
 		}
+
 		while (CurrentStep != step)
 		{
 			if (CurrentStep > step)
