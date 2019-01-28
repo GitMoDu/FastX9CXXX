@@ -177,7 +177,7 @@ public:
 class FastX9C102 : public FastX9CXXX
 {
 protected:
-	virtual uint32_t GetMaxResistance()
+	uint32_t GetMaxResistance()
 	{
 		return X9C102_RESISTANCE;
 	}
@@ -186,7 +186,7 @@ protected:
 class FastX9C103 : public FastX9CXXX
 {
 protected:
-	virtual uint32_t GetMaxResistance()
+	uint32_t GetMaxResistance()
 	{
 		return X9C103_RESISTANCE;
 	}
@@ -195,7 +195,7 @@ protected:
 class FastX9C503 : public FastX9CXXX
 {
 protected:
-	virtual uint32_t GetMaxResistance()
+	uint32_t GetMaxResistance()
 	{
 		return X9C503_RESISTANCE;
 	}
@@ -204,7 +204,7 @@ protected:
 class FastX9C104 : public FastX9CXXX
 {
 protected:
-	virtual uint32_t GetMaxResistance()
+	uint32_t GetMaxResistance()
 	{
 		return X9C104_RESISTANCE;
 	}
