@@ -39,7 +39,6 @@ private:
 
 	uint8_t CurrentStep = 0;
 	float ResistanceStep = 0;
-	bool ResistanceUpdated = false;
 
 protected:
 	virtual uint32_t GetMaxResistance()
@@ -49,30 +48,25 @@ protected:
 	
 	void UpdateResistanceStep()
 	{
-		if(!ResistanceUpdated && GetMaxResistance() != 0)
+		if(GetMaxResistance() != 0)
 		{
 			ResistanceStep = (float)GetMaxResistance() / (float) X9_STEPS;
-			ResistanceUpdated = true;
 		}		
 	}
 
 public:
 	uint32_t GetEstimatedResistance()
-	{
-		UpdateResistanceStep();
-		
+	{		
 		return uint32_t(round((float)CurrentStep * ResistanceStep));
 	}
 
 	FastX9CXXX()
 	{
-		ResistanceUpdated = false;
 		UpdateResistanceStep();
 	}
 
 	FastX9CXXX(const byte csPin, const byte udPin, const byte incPin)
 	{
-		ResistanceUpdated = false;
 		Setup(csPin, udPin, incPin);
 		UpdateResistanceStep();
 	}
