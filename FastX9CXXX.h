@@ -7,14 +7,8 @@
 #ifndef _FASTX9CXXX_h
 #define _FASTX9CXXX_h
 
-//#define USE_PIN_DEFINITIONS //Enable this to set the pins at compile time, from a definitions file.
-
 #include <Arduino.h>
 #include <Fast.h>
-
-#ifdef USE_PIN_DEFINITIONS 
-#include "PinDefinitions.h"
-#endif // USE_PIN_DEFINITIONS
 
 #define X9_STEPS 100 //100 Wiper Tap Points
 
@@ -63,19 +57,6 @@ protected:
 	}
 
 public:
-#ifdef USE_PIN_DEFINITIONS
-	bool Begin()
-	{
-		PinCS.Setup(X9_CS_PIN, LOW);
-		PinUD.Setup(X9_UD_PIN, LOW);
-		PinINC.Setup(X9_INC_PIN, HIGH);
-
-		UpdateResistanceStep();
-		
-		Reset();
-	}
-#endif // USE_PIN_DEFINITIONS
-
 	uint32_t GetEstimatedResistance()
 	{
 		UpdateResistanceStep();
