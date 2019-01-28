@@ -65,13 +65,13 @@ public:
 		UpdateResistanceStep();
 	}
 
-	FastX9CXXX(const byte csPin, const byte udPin, const byte incPin)
+	FastX9CXXX(const uint8_t csPin, const uint8_t udPin, const uint8_t incPin)
 	{
 		Setup(csPin, udPin, incPin);
 		UpdateResistanceStep();
 	}
 
-	void Setup(const byte csPin, const byte udPin, const byte incPin)
+	void Setup(const uint8_t csPin, const uint8_t udPin, const uint8_t incPin)
 	{
 		PinCS.Setup(csPin, LOW);
 		PinUD.Setup(udPin, LOW);
