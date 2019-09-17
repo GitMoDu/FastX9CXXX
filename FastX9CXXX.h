@@ -99,7 +99,7 @@ public:
 	//Input step [0 ; X9_STEPS]
 	void JumpToStep(const uint8_t step, const bool store = false)
 	{
-		if (step > X9_STEPS)
+		if (step > X9_STEPS - 1)
 		{
 			return;//Invalid step.
 		}
