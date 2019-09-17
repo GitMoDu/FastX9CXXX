@@ -20,14 +20,13 @@ void setup() {
 	Serial.println();
 	Serial.print(F("X9C104 Digital Potentiometer setup..."));
 	randomSeed(analogRead(0));
-	//Potentiometer.Begin();
 	Potentiometer.Setup(X9_CS_PIN, X9_UD_PIN, X9_INC_PIN);
 	Serial.println(F(" complete."));
 
 }
 
 void loop() {
-	Potentiometer.JumpToStep(random(100));
+	Potentiometer.JumpToStep(random(X9_STEPS));
 	Serial.print(F("Potentiometer current step: "));
 	Serial.print(Potentiometer.GetStep(), DEC);
 	Serial.println();
