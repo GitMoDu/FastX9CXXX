@@ -135,7 +135,7 @@ public:
 			Store();
 		}
 
-		if (CurrentStep > 1)
+		if (CurrentStep > 0)
 		{
 			CurrentStep--;
 		}
