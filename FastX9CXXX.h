@@ -10,8 +10,7 @@
 #include <Arduino.h>
 #include <Fast.h>
 
-
-class FastX9CXXX
+class X9CXXX
 {
 public:
 	static const uint8_t X9_STEPS = 100; //100 Wiper Tap Points
@@ -20,7 +19,11 @@ public:
 	static const uint32_t X9C103_RESISTANCE = 10000; //X9C103 = 10kOhm
 	static const uint32_t X9C503_RESISTANCE = 50000; //X9C503 = 50kOhm
 	static const uint32_t X9C104_RESISTANCE = 100000; //X9C104 = 100kOhm
+};
 
+template<const uint32_t Resistance>
+class FastX9CXXX
+{
 private:
 	//In microseconds.
 	const uint32_t NCS_TO_NINC_SETUP = 1;
@@ -36,41 +39,30 @@ private:
 	const uint32_t POWER_UP_TO_WIPER_STABLE = 500;
 
 private:
+	constexpr uint32_t GetResistanceStep()
+	{
+		return Resistance / X9CXXX::X9_STEPS;
+	}
+
+private:
 	FastOut PinCS, PinUD;
 	FastShifter PinINC;
 
 	uint8_t CurrentStep = 0;
-	float ResistanceStep = 0;
-
-protected:
-	virtual const uint32_t GetMaxResistance()
-	{
-		return 0;
-	}
-
-	void UpdateResistanceStep()
-	{
-		if (GetMaxResistance() != 0)
-		{
-			ResistanceStep = (float)GetMaxResistance() / (float)X9_STEPS;
-		}
-	}
+	uint32_t ResistanceStep = GetResistanceStep();
 
 public:
 	uint32_t GetEstimatedResistance()
 	{
-		return uint32_t(round((float)CurrentStep * ResistanceStep));
+		return CurrentStep * ResistanceStep;
 	}
 
 	FastX9CXXX()
-	{
-		UpdateResistanceStep();
-	}
+	{}
 
 	FastX9CXXX(const uint8_t csPin, const uint8_t udPin, const uint8_t incPin)
 	{
 		Setup(csPin, udPin, incPin);
-		UpdateResistanceStep();
 	}
 
 	void Setup(const uint8_t csPin, const uint8_t udPin, const uint8_t incPin)
@@ -88,7 +80,7 @@ public:
 		PinUD.Set(LOW);
 		PinINC.Set(HIGH);
 
-		for (uint8_t i = 0; i < X9_STEPS; i++)
+		for (uint8_t i = 0; i < X9CXXX::X9_STEPS; i++)
 		{
 			PinINC.PulseLow(NINC_HIGH_PERIOD);
 			delayMicroseconds(NINC_LOW_PERIOD);
@@ -101,7 +93,7 @@ public:
 	//Input step [0 ; X9_STEPS]
 	void JumpToStep(const uint8_t step, const bool store = false)
 	{
-		if (step > X9_STEPS - 1)
+		if (step > X9CXXX::X9_STEPS - 1)
 		{
 			return;//Invalid step.
 		}
@@ -156,7 +148,7 @@ public:
 			Store();
 		}
 
-		if (CurrentStep < X9_STEPS)
+		if (CurrentStep < X9CXXX::X9_STEPS)
 		{
 			CurrentStep++;
 		}
@@ -176,40 +168,47 @@ public:
 	}
 };
 
-class FastX9C102 : public FastX9CXXX
+class FastX9C102 : public FastX9CXXX<X9CXXX::X9C102_RESISTANCE>
 {
-protected:
-	const uint32_t GetMaxResistance()
-	{
-		return X9C102_RESISTANCE;
-	}
+public:
+	FastX9C102() :
+		FastX9CXXX<X9CXXX::X9C102_RESISTANCE>()
+	{}
+	FastX9C102(const uint8_t csPin, const uint8_t udPin, const uint8_t incPin) :
+		FastX9CXXX<X9CXXX::X9C102_RESISTANCE>(csPin, udPin, incPin)
+	{}
 };
 
-class FastX9C103 : public FastX9CXXX
+class FastX9C103 : public FastX9CXXX<X9CXXX::X9C103_RESISTANCE>
 {
-protected:
-	const uint32_t GetMaxResistance()
-	{
-		return X9C103_RESISTANCE;
-	}
+public:
+	FastX9C103() :
+		FastX9CXXX<X9CXXX::X9C103_RESISTANCE>()
+	{}
+	FastX9C103(const uint8_t csPin, const uint8_t udPin, const uint8_t incPin) :
+		FastX9CXXX<X9CXXX::X9C103_RESISTANCE>(csPin, udPin, incPin)
+	{}
 };
 
-class FastX9C503 : public FastX9CXXX
+class FastX9C104 : public FastX9CXXX<X9CXXX::X9C104_RESISTANCE>
 {
-protected:
-	const uint32_t GetMaxResistance()
-	{
-		return X9C503_RESISTANCE;
-	}
+public:
+	FastX9C104() :
+		FastX9CXXX<X9CXXX::X9C104_RESISTANCE>()
+	{}
+	FastX9C104(const uint8_t csPin, const uint8_t udPin, const uint8_t incPin) :
+		FastX9CXXX<X9CXXX::X9C104_RESISTANCE>(csPin, udPin, incPin)
+	{}
 };
 
-class FastX9C104 : public FastX9CXXX
+class FastX9C503 : public FastX9CXXX<X9CXXX::X9C503_RESISTANCE>
 {
-protected:
-	const uint32_t GetMaxResistance()
-	{
-		return X9C104_RESISTANCE;
-	}
+public:
+	FastX9C503() :
+		FastX9CXXX<X9CXXX::X9C503_RESISTANCE>()
+	{}
+	FastX9C503(const uint8_t csPin, const uint8_t udPin, const uint8_t incPin) :
+		FastX9CXXX<X9CXXX::X9C503_RESISTANCE>(csPin, udPin, incPin)
+	{}
 };
-
 #endif
