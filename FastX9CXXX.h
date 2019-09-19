@@ -49,7 +49,7 @@ private:
 	FastShifter PinINC;
 
 	uint8_t CurrentStep = 0;
-	uint32_t ResistanceStep = GetResistanceStep();
+	const uint32_t ResistanceStep = GetResistanceStep();
 
 public:
 	uint32_t GetEstimatedResistance()
