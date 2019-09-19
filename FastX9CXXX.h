@@ -45,18 +45,18 @@ protected:
 	{
 		return 0;
 	}
-	
+
 	void UpdateResistanceStep()
 	{
-		if(GetMaxResistance() != 0)
+		if (GetMaxResistance() != 0)
 		{
-			ResistanceStep = (float)GetMaxResistance() / (float) X9_STEPS;
-		}		
+			ResistanceStep = (float)GetMaxResistance() / (float)X9_STEPS;
+		}
 	}
 
 public:
 	uint32_t GetEstimatedResistance()
-	{		
+	{
 		return uint32_t(round((float)CurrentStep * ResistanceStep));
 	}
 
@@ -115,8 +115,8 @@ public:
 				Up(false);
 			}
 		}
-		
-		if(store)
+
+		if (store)
 		{
 			Store();
 		}
@@ -140,7 +140,7 @@ public:
 			CurrentStep--;
 		}
 	}
-	
+
 	void Up(const bool store = false)
 	{
 		PinINC.Set(HIGH);
