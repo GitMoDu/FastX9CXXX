@@ -13,7 +13,7 @@ by MoDu
 #define X9_UD_PIN 4
 #define X9_INC_PIN 5
 
-FastX9CXXX Potentiometer;
+FastX9C102 Potentiometer;
 
 void setup() {
 	Serial.begin(9600);
@@ -26,9 +26,9 @@ void setup() {
 }
 
 void loop() {
-	Potentiometer.JumpToStep(random(X9_STEPS));
-	Serial.print(F("Potentiometer current step: "));
-	Serial.print(Potentiometer.GetStep(), DEC);
-	Serial.println();
+	Potentiometer.JumpToStep(random(X9CXXX::X9_STEPS));
+	Serial.print(F("Potentiometer current resistance: "));
+	Serial.print(Potentiometer.GetEstimatedResistance(), DEC);
+	Serial.println(F(" Ohm"));
 	delay(1000);    // wait for a second
 }
