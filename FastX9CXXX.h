@@ -10,29 +10,31 @@
 #include <Arduino.h>
 #include <Fast.h>
 
-#define X9_STEPS 100 //100 Wiper Tap Points
-
-#define X9C102_RESISTANCE   1000 //X9C102 = 1kOhm
-#define X9C103_RESISTANCE  10000 //X9C103 = 10kOhm
-#define X9C503_RESISTANCE  50000 //X9C503 = 50kOhm
-#define X9C104_RESISTANCE 100000 //X9C104 = 100kOhm
-
-
-#define NCS_TO_NINC_SETUP 1
-#define NINC_HIGH_TO_UND_CHANGE 1
-#define UND_TO_NINC_SETUP 3
-#define NINC_LOW_PERIOD 1
-#define NINC_HIGH_PERIOD 1
-#define NINC_INACTIVE_TO_NCS_INACTIVE 1
-#define NCS_DESELECT_TIME_STORE 20000
-#define NCS_DESELECT_TIME_NO_STORE 1
-#define NINC_TO_VWRW_CHANGE 100
-#define NINC_CYCLE_TIME 2
-#define POWER_UP_TO_WIPER_STABLE 500
-
 
 class FastX9CXXX
 {
+public:
+	static const uint8_t X9_STEPS = 100; //100 Wiper Tap Points
+
+	static const uint32_t X9C102_RESISTANCE = 1000; //X9C102 = 1kOhm
+	static const uint32_t X9C103_RESISTANCE = 10000; //X9C103 = 10kOhm
+	static const uint32_t X9C503_RESISTANCE = 50000; //X9C503 = 50kOhm
+	static const uint32_t X9C104_RESISTANCE = 100000; //X9C104 = 100kOhm
+
+private:
+	//In microseconds.
+	const uint32_t NCS_TO_NINC_SETUP = 1;
+	const uint32_t NINC_HIGH_TO_UND_CHANGE = 1;
+	const uint32_t UND_TO_NINC_SETUP = 3;
+	const uint32_t NINC_LOW_PERIOD = 1;
+	const uint32_t NINC_HIGH_PERIOD = 1;
+	const uint32_t NINC_INACTIVE_TO_NCS_INACTIVE = 1;
+	const uint32_t NCS_DESELECT_TIME_STORE = 20000;
+	const uint32_t NCS_DESELECT_TIME_NO_STORE = 1;
+	const uint32_t NINC_TO_VWRW_CHANGE = 100;
+	const uint32_t NINC_CYCLE_TIME = 2;
+	const uint32_t POWER_UP_TO_WIPER_STABLE = 500;
+
 private:
 	FastOut PinCS, PinUD;
 	FastShifter PinINC;
