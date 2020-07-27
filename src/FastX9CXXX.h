@@ -8,7 +8,6 @@
 #define _FASTX9CXXX_h
 
 #include <Arduino.h>
-#include <Fast.h>
 
 class X9CXXX
 {
@@ -45,8 +44,9 @@ private:
 	}
 
 private:
-	FastOut PinCS, PinUD;
-	FastShifter PinINC;
+	uint8_t PinCS = 0;
+	uint8_t PinUD = 0;
+	uint8_t PinINC = 0;
 
 	uint8_t CurrentStep = 0;
 	const uint32_t ResistanceStep = GetResistanceStep();
@@ -67,26 +67,37 @@ public:
 
 	void Setup(const uint8_t csPin, const uint8_t udPin, const uint8_t incPin)
 	{
-		PinCS.Setup(csPin, LOW);
-		PinUD.Setup(udPin, LOW);
-		PinINC.Setup(incPin, HIGH);
+		PinCS = csPin;
+		PinUD = udPin;
+		PinINC = incPin;
+
+		pinMode(PinCS, OUTPUT);
+		pinMode(PinUD, OUTPUT);
+		pinMode(PinINC, OUTPUT);
+
+		digitalWrite(PinCS, LOW);
+		digitalWrite(PinUD, LOW);
+		digitalWrite(PinINC, HIGH);
 
 		Reset();
 	}
 
 	void Reset()
 	{
-		PinCS.Set(LOW);
-		PinUD.Set(LOW);
-		PinINC.Set(HIGH);
+		digitalWrite(PinCS, LOW);
+		digitalWrite(PinUD, LOW);
+		digitalWrite(PinINC, HIGH);
 
 		for (uint8_t i = 0; i < X9CXXX::X9_STEPS; i++)
 		{
-			PinINC.PulseLow(NINC_HIGH_PERIOD);
+			digitalWrite(PinINC, LOW);
+			delayMicroseconds(NINC_HIGH_PERIOD);
+			digitalWrite(PinINC, HIGH);
 			delayMicroseconds(NINC_LOW_PERIOD);
 		}
-		PinCS.Set(HIGH);
-		PinUD.Set(HIGH);
+		digitalWrite(PinCS, HIGH);
+		digitalWrite(PinUD, HIGH);
+
 		CurrentStep = 0;
 	}
 
@@ -118,11 +129,12 @@ public:
 
 	void Down(const bool store = false)
 	{
-		PinINC.Set(HIGH);
-		PinCS.Set(LOW);
-		PinUD.Set(LOW);
+		digitalWrite(PinINC, HIGH);
+		digitalWrite(PinCS, LOW);
+		digitalWrite(PinUD, LOW);
+
 		delayMicroseconds(NINC_HIGH_TO_UND_CHANGE);
-		PinINC.Set(LOW);
+		digitalWrite(PinINC, LOW);
 
 		if (store)
 		{
@@ -137,11 +149,12 @@ public:
 
 	void Up(const bool store = false)
 	{
-		PinINC.Set(HIGH);
-		PinCS.Set(LOW);
-		PinUD.Set(HIGH);
+		digitalWrite(PinINC, HIGH);
+		digitalWrite(PinCS, LOW);
+		digitalWrite(PinUD, HIGH);
+
 		delayMicroseconds(NINC_HIGH_TO_UND_CHANGE);
-		PinINC.Set(LOW);
+		digitalWrite(PinINC, LOW);
 
 		if (store)
 		{
@@ -161,10 +174,10 @@ public:
 
 	void Store()
 	{
-		PinINC.Set(HIGH);
-		PinCS.Set(HIGH);
+		digitalWrite(PinINC, HIGH);
+		digitalWrite(PinCS, HIGH);
 		delayMicroseconds(NCS_DESELECT_TIME_STORE);//This is way too long to wait for storage, better check elapsed outside if needed.
-		PinCS.Set(LOW);
+		digitalWrite(PinCS, LOW);
 	}
 };
 
