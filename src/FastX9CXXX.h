@@ -44,9 +44,9 @@ private:
 	}
 
 private:
-	uint8_t PinCS = 0;
-	uint8_t PinUD = 0;
-	uint8_t PinINC = 0;
+	uint8_t PinCS = UINT8_MAX;
+	uint8_t PinUD = UINT8_MAX;
+	uint8_t PinINC = UINT8_MAX;
 
 	uint8_t CurrentStep = 0;
 	const uint32_t ResistanceStep = GetResistanceStep();
@@ -65,11 +65,16 @@ public:
 		Setup(csPin, udPin, incPin);
 	}
 
-	void Setup(const uint8_t csPin, const uint8_t udPin, const uint8_t incPin)
+	bool Setup(const uint8_t csPin, const uint8_t udPin, const uint8_t incPin)
 	{
 		PinCS = csPin;
 		PinUD = udPin;
 		PinINC = incPin;
+
+		if (PinCS == UINT8_MAX || PinUD == UINT8_MAX || PinINC == UINT8_MAX)
+		{
+			return false;
+		}
 
 		pinMode(PinCS, OUTPUT);
 		pinMode(PinUD, OUTPUT);
@@ -80,6 +85,8 @@ public:
 		digitalWrite(PinINC, HIGH);
 
 		Reset();
+
+		return true;
 	}
 
 	void Reset()
