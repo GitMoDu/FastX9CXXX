@@ -84,8 +84,6 @@ public:
 		digitalWrite(PinUD, LOW);
 		digitalWrite(PinINC, HIGH);
 
-		Reset();
-
 		return true;
 	}
 
