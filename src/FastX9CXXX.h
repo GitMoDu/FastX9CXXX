@@ -65,7 +65,7 @@ public:
 		Setup(csPin, udPin, incPin);
 	}
 
-	bool Setup(const uint8_t csPin, const uint8_t udPin, const uint8_t incPin)
+	const bool Setup(const uint8_t csPin, const uint8_t udPin, const uint8_t incPin)
 	{
 		PinCS = csPin;
 		PinUD = udPin;
@@ -172,7 +172,7 @@ public:
 		}
 	}
 
-	uint8_t GetStep()
+	const uint8_t GetStep()
 	{
 		return CurrentStep;
 	}
