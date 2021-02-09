@@ -1,7 +1,6 @@
 /// 
 ///  Created for personal use, use it at your own risk and benefit.
 ///  https://github.com/GitMoDu/FastX9CXXX
-///  Depends on Fast for IO https://github.com/GitMoDu/Fast
 /// 
 
 #ifndef _FASTX9CXXX_h
