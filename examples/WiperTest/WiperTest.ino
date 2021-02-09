@@ -34,7 +34,7 @@ uint16_t Angle = 0;
 
 void loop() {
 	// Step in sine wave.
-	const uint8_t step = (0.51 * sin(Angle / 5.0) * X9CXXX::X9_STEPS) + (X9CXXX::X9_STEPS / 2);
+	const uint8_t step = (0.5 * sin(Angle / 5.0) * X9CXXX::X9_STEPS) + (X9CXXX::X9_STEPS / 2);
 	Potentiometer.JumpToStep(step);
 
 	const uint8_t result = map(analogRead(WIPER_ANALOG_PIN), 0, 1023, 0, X9CXXX::X9_STEPS);
