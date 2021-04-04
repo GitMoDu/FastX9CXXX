@@ -86,6 +86,7 @@ public:
 		return true;
 	}
 
+	// Resets the pot back to a known state.
 	void Reset()
 	{
 		digitalWrite(PinCS, LOW);
@@ -105,7 +106,7 @@ public:
 		CurrentStep = 0;
 	}
 
-	//Input step [0 ; X9_STEPS]
+	// Input step [0 ; X9_STEPS]
 	void JumpToStep(const uint8_t step, const bool store = false)
 	{
 		if (step > X9CXXX::X9_STEPS - 1)
@@ -131,6 +132,7 @@ public:
 		}
 	}
 
+	// Shifts the pot's wiper one step down.
 	void Down(const bool store = false)
 	{
 		digitalWrite(PinINC, HIGH);
@@ -151,6 +153,7 @@ public:
 		}
 	}
 
+	// Shifts the pot's wiper one step up.
 	void Up(const bool store = false)
 	{
 		digitalWrite(PinINC, HIGH);
