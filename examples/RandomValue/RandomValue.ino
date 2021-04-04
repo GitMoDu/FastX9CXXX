@@ -1,11 +1,6 @@
-/*
-Example project to control a X9CXXX digital potentiometer
-
-https://github.com/GitMoDu/FastX9CXXX
-
-modified 30 Aug 2017
-by MoDu
-*/
+///
+/// Example project to control a X9C102 digital potentiometer.
+///
 
 #include <FastX9CXXX.h>
 
@@ -18,11 +13,12 @@ FastX9C102 Potentiometer;
 void setup() {
 	Serial.begin(9600);
 	Serial.println();
-	Serial.print(F("X9C104 Digital Potentiometer setup..."));
-	randomSeed(analogRead(0));
-	Potentiometer.Setup(X9_CS_PIN, X9_UD_PIN, X9_INC_PIN);
-	Serial.println(F(" complete."));
+	Serial.print(F("X9C102 Digital Potentiometer setup..."));
 
+	Potentiometer.Setup(X9_CS_PIN, X9_UD_PIN, X9_INC_PIN);
+	Potentiometer.Reset();
+
+	Serial.println(F(" complete."));
 }
 
 void loop() {
