@@ -20,6 +20,7 @@ uint16_t Angle = 0;
 void setup() {
 	Serial.begin(9600);
 	Serial.println();
+
 	//Serial.print(F("X9C104 Digital Potentiometer Sine Wave Test."));
 
 	// Setup output read, analog pin.

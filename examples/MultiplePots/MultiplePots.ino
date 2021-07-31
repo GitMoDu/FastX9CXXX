@@ -23,6 +23,7 @@ void setup() {
 
 	Serial.print(F("X9C104 and X9C503 Digital Potentiometers setup..."));
 
+	// Reset potentiometers to known position (Step == 0).
 	Potentiometer1.Reset();
 	Potentiometer2.Reset();
 

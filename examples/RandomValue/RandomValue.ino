@@ -16,6 +16,8 @@ void setup() {
 	Serial.print(F("X9C102 Digital Potentiometer setup..."));
 
 	Potentiometer.Setup(X9_CS_PIN, X9_UD_PIN, X9_INC_PIN);
+
+	// Reset potentiometer to known position (Step == 0).
 	Potentiometer.Reset();
 
 	Serial.println(F(" complete."));
